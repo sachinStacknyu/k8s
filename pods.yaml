@@ -4,53 +4,53 @@ metadata:
   name: practice-pod
 spec:
   containers:
-  - name: nginx-pod
-    image: nginx:1.25.3
-    env:
-    - name: JWT_TOKEN
-      valueFrom:
-        secretKeyRef:
-          name: secrets-practice
-          key: JWT_TOKEN
-    - name: say_hello_to_all
-      valueFrom:
-        secretKeyRef:
-         name: configmap-practice
-         key: say_hello_to_all
-    - name: say_bye_to_all
-      valueFrom:
-        secretKeyRef:
-          name: configmap-practice
-          key:  say_bye_to_all
-    ports:
-    - containerPort: 80
+    - name: nginx-pod
+      image: nginx:1.25.3
+      env:
+        - name: JWT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: secrets-practice
+              key: JWT_TOKEN
+        - name: say_hello_to_all
+          valueFrom:
+            secretKeyRef:
+              name: configmap-practice
+              key: say_hello_to_all
+        - name: say_bye_to_all
+          valueFrom:
+            secretKeyRef:
+              name: configmap-practice
+              key: say_bye_to_all
+      ports:
+        - containerPort: 80
 
-# for security reason so that is doesn't run as root user giving userID and not allowing the privilegeescaltions (checks is the pod get gets the more priviledge now compratively then it had when it started)
-    securityContext:
-      runAsNonRoot: true
-      runAsUser: 1000
-      allowPrivilegeEscalation: false
+      # for security reason so that is doesn't run as root user giving userID and not allowing the privilegeescaltions (checks is the pod get gets the more priviledge now compratively then it had when it started)
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        allowPrivilegeEscalation: false
 
-    resources:
-      limits:
-        memory: "256Mi"
-        cpu: "500m"
-      requests:
-        memory: "128Mi"
-        cpu: "250m"
+      resources:
+        limits:
+          memory: "256Mi"
+          cpu: "500m"
+        requests:
+          memory: "128Mi"
+          cpu: "250m"
 
-#  to check if the pod is alive of not (Should i restart the POD ???)
-    livenessProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 10
+      #  to check if the pod is alive of not (Should i restart the POD ???)
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 5
+        periodSeconds: 10
 
-# to check if the pod can receive the traffic or not (is the pod ready to receive the traffic???)
-    readinessProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 10
+      # to check if the pod can receive the traffic or not (is the pod ready to receive the traffic???)
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 5
+        periodSeconds: 10

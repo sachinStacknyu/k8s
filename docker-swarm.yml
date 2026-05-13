@@ -1,0 +1,58 @@
+services:
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    networks:
+      - dokploy-network
+    volumes:
+      - nginx-data:/usr/share/nginx/html
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+      placement:
+        constraints:
+          - node.role == worker
+
+  app:
+    image: node:18
+    command: sh -c "npm install && node server.js"
+    working_dir: /usr/src/app
+    volumes:
+      - app-data:/usr/src/app
+    networks:
+      - dokploy-network
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: any
+      update_config:
+        parallelism: 2
+        delay: 5s
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    networks:
+      - dokploy-network
+    volumes:
+      - redis-data:/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  dokploy-network:
+    driver: overlay
+
+volumes:
+  nginx-data:
+  app-data:
+  redis-data:

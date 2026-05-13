@@ -1,0 +1,15 @@
+apiVerions: apps/v1
+kind: StaetefulSet  
+metadata:
+  name: practice-stateful-set
+spec:
+  selectors:
+    matchLabels:
+      app: nginx
+  serviceName: "nginx"
+  replicas: 4
+  minReadySeconds: 10
+  template:
+    meatadata:
+      labels:
+        app: nginx

@@ -1,0 +1,7 @@
+apiVerion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-practice
+data:
+  say_hello_to_all: "Hi to all the members!!!"
+  say_bye_to_all: "Say BYE to all the members!!!"

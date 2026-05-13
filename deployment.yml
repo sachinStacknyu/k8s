@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: practice-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+
+  selector:
+    matchLabels:
+      app: nginx
+
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.25.3
+        ports:
+        - containerPort: 80
+
+        resources:
+        limits:
+          memory: "256Mi"
+          cpu: "500m"
+        requests:
+          memory: "128Mi"
+          cpu: "250m"
+
+# Basically for the replacing the old pods for updating to the new pods rollingupdate is the by default type 
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+# the maxSurge measn how many extra pods the K8s can create after all the required pods are created successfully
+      maxSurge: 1
+# This is for recreating all the pods but before recreating it will destroy all the pods then it will make the new pods
+  # strategy:
+  #   type: Recreate
+  #   rollingUpdate:
+  #     maxUnavailable: 1

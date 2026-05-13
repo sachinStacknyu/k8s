@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-volumes
+spec:
+  containers:
+    - name: nginx-for-Pod
+      image: nginx:1.12.1 
+      ports:
+      - containerPort: 80
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+
+  volumes:
+    - name: config-volume
+      configMap:
+        name: Config_Map_Name
+        items:
+          - key:  log_level
+            path:  log_level.conf
+
+
+      resources:
+      limits:
+        memory: "256Mi"
+        cpu: "500m"
+      requests:
+        memory: "128Mi"
+        cpu: "250m"
+  
